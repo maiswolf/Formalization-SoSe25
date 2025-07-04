@@ -131,6 +131,26 @@ theorem quotient_nilradical_radical_eq_center : radical R (L ⧸ (nilradical R L
     sorry
   exact le_antisymm h2 h1
 
+theorem quotient_nilradical_radical_eq_center2 : radical R (L ⧸ (nilradical R L)) = center R (L ⧸ (nilradical R L)) := by
+  have center_eq_zero : (center R (L ⧸ (nilradical R L))) = ⊥ := by
+    have center_nilpotent : (IsNilpotent (L ⧸ (nilradical R L)) (center R (L ⧸ (nilradical R L)))) := by
+      apply trivialIsNilpotent
+    apply nil_ideals_eq_zero_quotient_nilradical at center_nilpotent
+    exact center_nilpotent
+  have rad_eq_zero : (radical R (L ⧸ (nilradical R L))) = ⊥ := by
+    unfold radical
+    rw [sSup_eq_bot]
+    simp
+    intro h h'
+    obtain⟨a⟩ := h'
+    -- für g auflösbares Ideal, es existiert k sodass [g^(k), g^(k)] = 0, damit ist g^(k) nilpotent, also
+    -- g^(k) = 0 (nach nil_ideals_eq_zero_quotient_nilradical). Damit ist [g^(k-1),g^(k-1)]=0
+    -- per Induktion immer so weiter, dann folgt g = 0
+    sorry
+  rw [← center_eq_zero] at rad_eq_zero
+  exact rad_eq_zero
+
+#check LieAlgebra.derivedSeries
 #check LieAlgebra.abelian_of_le_center
 #check LieAlgebra.nilpotent_ad_of_nilpotent_algebra
 noncomputable section
