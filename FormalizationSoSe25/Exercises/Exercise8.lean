@@ -10,13 +10,47 @@ For this exercise recall the following properties of `Finset`:
 #check mem_inter
 #check mem_union
 example (X : Type*) [DecidableEq X] (A B C : Finset X): A ∩ (B ∪ C) = (A ∩ B) ∪ (A ∩ C) := by
-  sorry
+  ext h
+  constructor
+  · intro h'
+    simp
+    simp at h'
+    obtain ⟨hA,hB⟩ := h'
+    rcases hB  with h4 | h5
+    left
+    constructor
+    exact hA
+    exact h4
+    right
+    constructor
+    exact hA
+    exact h5
+  · intro h'
+    simp [mem_union]
+    simp at h'
+    constructor
+    · rcases h' with h1 | h2
+      obtain ⟨h3,h4⟩ := h1
+      exact h3
+      obtain ⟨h3,h4⟩ := h2
+      exact h3
+    · rcases h' with h1 | h2
+      obtain ⟨h3,h4⟩ := h1
+      left
+      exact h4
+      obtain ⟨h3,h4⟩ := h2
+      right
+      exact h4
 
 /-
 This next one should be very straightforward, so don't overthink it!
 -/
+
+-- set_option trace.Meta.Tactic.simp true
 example (X Y : Type*) [Fintype X] [Fintype Y] : card (Fin 2 → (X ⊕ Y)) = (card X)^2 + 2*(card X) * (card Y) + (card Y)^2 := by
-  sorry
+    simp
+    ring
+
 
 /-
 Recall from the lecture how we can prove the following two properties:

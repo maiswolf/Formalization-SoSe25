@@ -19,11 +19,18 @@ variable {G H : Type*} [Group G] [Group H]
 
 open Subgroup
 
+#check comap
+
 example (f : G →* H) (S T : Subgroup H) (hST : S ≤ T) : comap f S ≤ comap f T := by
-  sorry
+  intro h h'
+  rw [mem_comap] at h'
+  rw [mem_comap]
+  apply hST
+  exact h'
 
 example (f : G →* H) (S T : Subgroup G) (hST : S ≤ T) : map f S ≤ map f T := by
   sorry
+
 
 variable {K : Type*} [Group K]
 
@@ -36,7 +43,16 @@ example (φ : G →* H) (ψ : H →* K) (U : Subgroup K) :
 -- pushing it forward along the composite of the homomorphisms.
 example (φ : G →* H) (ψ : H →* K) (S : Subgroup G) :
     map (ψ.comp φ) S = map ψ (S.map φ) := by
-    sorry
+    ext a
+    constructor
+    · intro h
+      simp at h
+      simp
+      exact h
+    · intro h
+      simp
+      simp at h
+      exact h
 
 -- For this exercise recall that subgroups have the identity element.
 #check Subgroup.one_mem
@@ -45,7 +61,16 @@ lemma eq_bot_iff_card {K : Subgroup G} :
     K = ⊥ ↔ Nat.card K = 1 := by
   suffices (∀ x ∈ K, x = 1) ↔ ∃ x ∈ K, ∀ a ∈ K, a = x by
     simpa [eq_bot_iff_forall, Nat.card_eq_one_iff_exists]
-  sorry
+  constructor
+  · intro h
+    use 1
+    constructor
+    · apply one_mem
+    · exact h
+  · intro h1 h2 h3
+    obtain⟨a,b⟩ := h1
+    obtain⟨c,d⟩ := b
+
 
 
 /-

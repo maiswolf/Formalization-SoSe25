@@ -11,7 +11,8 @@ You will also need the following functions: -/
 #check mul_assoc
 
 example (a b c : ℝ) : a * b * c = b * (a * c) := by
-  sorry
+  rw[mul_comm a b]
+  rw[mul_assoc]
 
 example (a b c : ℝ) : c * b * a = b * (a * c) := by
   sorry

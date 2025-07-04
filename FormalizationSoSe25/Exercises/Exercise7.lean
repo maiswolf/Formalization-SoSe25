@@ -24,6 +24,7 @@ Define a `structure`:
 Hint: This requires `M` and `N` having instances of `Monoid` and `LE`.
 -/
 
+structure OrderPresMonoidHom {M N : Type*} [Monoid M] [Monoid N]
 /- DELETE THIS FILL ANSWER HERE-/
 
 /-
