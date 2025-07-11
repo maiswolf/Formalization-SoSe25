@@ -150,6 +150,48 @@ theorem quotient_nilradical_radical_eq_center2 : radical R (L ⧸ (nilradical R 
   rw [← center_eq_zero] at rad_eq_zero
   exact rad_eq_zero
 
+variable (L : Type v)
+variable [CommRing ℤ]
+variable [LieRing L] [g : LieAlgebra ℤ L]
+
+theorem radical_eq_center_if_nil_ideals_eq_zero (nil_ideals_eq_zero : ∀(I : LieIdeal ℤ L), IsNilpotent L I → I = ⊥) : radical ℤ L = center ℤ L := by
+  have center_eq_zero : center ℤ L = ⊥ := by
+    have center_nilpotent : (IsNilpotent L (center ℤ L)) := by
+      apply trivialIsNilpotent
+    apply nil_ideals_eq_zero at center_nilpotent
+    exact center_nilpotent
+  have rad_eq_zero : radical ℤ L = ⊥ := by
+    unfold radical
+    simp
+    intro h h'
+    obtain ⟨a⟩ := h'
+    unfold LieAlgebra.derivedSeries at a
+    unfold derivedSeriesOfIdeal at a
+    obtain ⟨b,c⟩ := a
+    have derivedSeries_step (k : ℕ) (hk : derivedSeriesOfIdeal ℤ h k = ⊥) : derivedSeriesOfIdeal ℤ h (k-1) = ⊥ := by
+      unfold LieAlgebra.derivedSeries derivedSeriesOfIdeal at hk
+      unfold derivedSeriesOfIdeal
+      sorry
+    have derivedSeries_zero : derivedSeries ℤ h 0 = ⊥ := by
+      sorry
+    have derived_series_seriesOfIdeal_bot : derivedSeries ℤ h 0 = ⊥ ↔ derivedSeriesOfIdeal ℤ L 0 h = ⊥ := by
+      apply LieIdeal.derivedSeries_eq_bot_iff
+    have zero_series_eq_bot : derivedSeriesOfIdeal ℤ L 0 h = ⊥ := by
+      obtain⟨a,b⟩ := derived_series_seriesOfIdeal_bot
+      apply a
+      exact derivedSeries_zero
+    have zero_series_eq_h : derivedSeriesOfIdeal ℤ L 0 h = h := by
+      rfl
+    rw [zero_series_eq_h] at zero_series_eq_bot
+    exact zero_series_eq_bot
+
+  rw [← center_eq_zero] at rad_eq_zero
+  exact rad_eq_zero
+
+#check Nat.caseStrongRecOn
+#check LieIdeal.derivedSeries_eq_bot_iff
+#check derivedSeries_zero
+#check LieIdeal.derivedSeries_eq_bot_iff
 #check LieAlgebra.derivedSeries
 #check LieAlgebra.abelian_of_le_center
 #check LieAlgebra.nilpotent_ad_of_nilpotent_algebra
