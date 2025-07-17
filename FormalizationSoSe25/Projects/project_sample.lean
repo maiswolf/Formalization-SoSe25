@@ -22,6 +22,7 @@ open LieAlgebra LieModule
 #check LieIdeal.isNilpotent_iff_le_maxNilpotentIdeal
 #check IsAtom
 #check IsNilpotent
+#check LieIdeal
 
 -- simple: irreducible, non-abelian
 #check LieAlgebra.IsSimple
@@ -154,6 +155,10 @@ variable (L : Type v)
 variable [CommRing ℤ]
 variable [LieRing L] [g : LieAlgebra ℤ L]
 
+lemma ideal_bot_nilpotent (I : LieIdeal ℤ L) (h : ⊥=⁅I,I⁆) : IsNilpotent L I := by
+  sorry
+
+
 theorem radical_eq_center_if_nil_ideals_eq_zero (nil_ideals_eq_zero : ∀(I : LieIdeal ℤ L), IsNilpotent L I → I = ⊥) : radical ℤ L = center ℤ L := by
   have center_eq_zero : center ℤ L = ⊥ := by
     have center_nilpotent : (IsNilpotent L (center ℤ L)) := by
@@ -168,9 +173,14 @@ theorem radical_eq_center_if_nil_ideals_eq_zero (nil_ideals_eq_zero : ∀(I : Li
     unfold LieAlgebra.derivedSeries at a
     unfold derivedSeriesOfIdeal at a
     obtain ⟨b,c⟩ := a
-    have derivedSeries_step (k : ℕ) (hk : derivedSeriesOfIdeal ℤ h k = ⊥) : derivedSeriesOfIdeal ℤ h (k-1) = ⊥ := by
-      unfold LieAlgebra.derivedSeries derivedSeriesOfIdeal at hk
-      unfold derivedSeriesOfIdeal
+    have derivedSeries_step (k : ℕ) (hk : derivedSeries ℤ h (k+1) = ⊥) : derivedSeries ℤ h k = ⊥ := by
+      unfold LieAlgebra.derivedSeries at hk
+      unfold LieAlgebra.derivedSeries
+      have succ : derivedSeriesOfIdeal ℤ h (k+1) ⊤ = ⁅derivedSeriesOfIdeal ℤ h k ⊤, derivedSeriesOfIdeal ℤ h k ⊤⁆ := by
+        apply LieAlgebra.derivedSeriesOfIdeal_succ
+      rw [hk] at succ
+      apply ideal_bot_nilpotent at succ
+      --apply nil_ideals_eq_zero at succ
       sorry
     have derivedSeries_zero : derivedSeries ℤ h 0 = ⊥ := by
       sorry
@@ -188,6 +198,15 @@ theorem radical_eq_center_if_nil_ideals_eq_zero (nil_ideals_eq_zero : ∀(I : Li
   rw [← center_eq_zero] at rad_eq_zero
   exact rad_eq_zero
 
+variable (I : LieIdeal ℤ L)
+variable (k : ℕ)
+variable (w : derivedSeriesOfIdeal ℤ I k ⊤)
+
+
+#moogle "For LieIdeal I, if ⁅I,I⁆ = ⊥ then I nilpotent."
+#check LieSubmodule.lie_abelian_iff_lie_self_eq_bot
+#check derivedSeries_le_lowerCentralSeries
+#check LieAlgebra.derivedSeriesOfIdeal_succ
 #check Nat.caseStrongRecOn
 #check LieIdeal.derivedSeries_eq_bot_iff
 #check derivedSeries_zero
